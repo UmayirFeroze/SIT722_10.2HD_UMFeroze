@@ -1,0 +1,12 @@
+{
+  "name": "nodejs-azure-keyvault-k8s-example",
+  "version": "1.0.0",
+  "description": "A Node.js app demonstrating Azure Key Vault integration with Kubernetes",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
