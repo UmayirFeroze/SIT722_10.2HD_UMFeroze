@@ -22,10 +22,10 @@ stages:
       name: Default  # This uses your self-hosted agent pool
     steps:
     - script: |
-        echo "Checking Docker configuration..."
-        echo "DOCKER_HOST: $DOCKER_HOST"
-        docker info
-        docker version
+            docker context use desktop-linux
+            echo "Current Docker context:"
+            docker context show
+            docker info
       displayName: 'Check Docker Configuration'
 
     - task: Docker@2
