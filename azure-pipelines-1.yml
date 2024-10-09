@@ -11,6 +11,7 @@ variables:
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'bmdk43101-auth'
+  DOCKER_HOST: 'unix:///System/Volumes/Data/Users/umairferoze/.docker/run/docker.sock'
 
 stages:
 - stage: Build
@@ -22,37 +23,33 @@ stages:
       name: Default  # This uses your self-hosted agent pool
     steps:
     - script: |
-            echo "Current user: $(whoami)"
-            echo "User groups: $(groups)"
-            echo "Docker socket permissions:"
-            ls -l /Users/umairferoze/Library/Containers/com.docker.docker/Data/docker-cli.sock
+        echo "Current user: $(whoami)"
+        echo "User groups: $(groups)"
+        echo "Docker socket permissions:"
+        ls -l /System/Volumes/Data/Users/umairferoze/.docker/run/docker.sock
+        echo "DOCKER_HOST: $DOCKER_HOST"
       displayName: 'Check User and Permissions'
       
     - script: |
-            echo "Unsetting DOCKER_HOST"
-            unset DOCKER_HOST
-      displayName: 'Unset DOCKER_HOST'
+        echo "Docker context list:"
+        docker context list
+        echo "Setting Docker context to desktop-linux"
+        docker context use desktop-linux
+        echo "Current Docker context:"
+        docker context show
+      displayName: 'Set Docker Context'
 
     - script: |
-            docker context use desktop-linux
-            echo "Current Docker context:"
-            docker context show
-            docker info
-      displayName: 'Check Docker Configuration'
-    
-    - script: |
-            echo "Checking Docker daemon"
-            docker info
-            docker version
-            docker ps
+        echo "Checking Docker daemon"
+        docker info
+        docker version
+        docker ps
       displayName: 'Check Docker Daemon'
     
     - script: |
-            echo "Current user: $(whoami)"
-            echo "Docker socket permissions:"
-            ls -l /Users/umairferoze/Library/Containers/com.docker.docker/Data/docker-cli.sock
-            groups $(whoami)
-      displayName: 'Check User and Permissions'
+        echo "Testing Docker command:"
+        docker run hello-world
+      displayName: 'Test Docker Command'
 
     - task: Docker@2
       displayName: Build and push an image to container registry
