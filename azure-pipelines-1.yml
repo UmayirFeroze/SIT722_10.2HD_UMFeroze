@@ -5,24 +5,13 @@ resources:
 - repo: self
 
 variables:
-- group: KeyVaultVariables
-
-- name: dockerRegistryServiceConnection
-  value: '83f2b4e7-f504-4449-b9b9-b78f9a936531'
-- name: imageRepository
-  value: 'bmdk4'
-- name: containerRegistry
-  value: '$(ACR_NAME)' 
-- name: dockerfilePath
-  value: '**/Dockerfile'
-- name: tag
-  value: '$(Build.BuildId)'
-- name: imagePullSecret
-  value: 'bmdk43101-auth'
-- name: DOCKER_HOST
-  value: 'unix:///System/Volumes/Data/Users/umairferoze/.docker/run/docker.sock'
-- name: DOCKER_BUILDKIT
-  value: 1
+  dockerRegistryServiceConnection: '83f2b4e7-f504-4449-b9b9-b78f9a936531'
+  imageRepository: 'bmdk4'
+  containerRegistry: 'bmdk4.azurecr.io'
+  dockerfilePath: '**/Dockerfile'
+  tag: '$(Build.BuildId)'
+  imagePullSecret: 'bmdk43101-auth'
+  DOCKER_HOST: 'unix:///System/Volumes/Data/Users/umairferoze/.docker/run/docker.sock'
 
 stages:
 - stage: Build
@@ -31,7 +20,7 @@ stages:
   - job: Build
     displayName: Build job
     pool:
-      name: Default
+      name: Default  # This uses your self-hosted agent pool
     steps:
     - script: |
         echo "Current user: $(whoami)"
@@ -62,29 +51,6 @@ stages:
         docker run hello-world
       displayName: 'Test Docker Command'
 
-    - script: |
-        echo "Node.js version:"
-        node --version
-        echo "npm version:"
-        npm --version
-      displayName: 'Check Node.js and npm versions'
-
-    - script: |
-        echo "Contents of working directory:"
-        ls -la
-        echo "Contents of manifests directory:"
-        ls -la manifests
-      displayName: 'List Directory Contents'
-
-    - script: |
-        if [ ! -f package-lock.json ]; then
-          echo "package-lock.json not found. Running npm install to generate it."
-          npm install
-        else
-          echo "package-lock.json found."
-        fi
-      displayName: 'Check and generate package-lock.json if needed'
-
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
@@ -95,7 +61,6 @@ stages:
         tags: |
           $(tag)
           latest
-        arguments: '--build-arg BUILDKIT_INLINE_CACHE=1'
 
     - publish: $(System.DefaultWorkingDirectory)/manifests
       artifact: manifests
