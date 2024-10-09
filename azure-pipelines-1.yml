@@ -12,7 +12,7 @@ variables:
 - name: imageRepository
   value: 'bmdk4'
 - name: containerRegistry
-  value: '$(acr-name)'
+  value: $(acr-name)
 - name: dockerfilePath
   value: '**/Dockerfile'
 - name: tag
