@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 variables:
-- group: KeyVaultVariables  # Add this line to include the variable group from Key Vault
+- group: KeyVaultVariables
 
 - name: dockerRegistryServiceConnection
   value: '83f2b4e7-f504-4449-b9b9-b78f9a936531'
@@ -31,7 +31,7 @@ stages:
   - job: Build
     displayName: Build job
     pool:
-      name: Default  # This uses your self-hosted agent pool
+      name: Default
     steps:
     - script: |
         echo "Current user: $(whoami)"
