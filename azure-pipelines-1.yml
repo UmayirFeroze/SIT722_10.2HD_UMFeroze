@@ -5,14 +5,24 @@ resources:
 - repo: self
 
 variables:
-  dockerRegistryServiceConnection: '83f2b4e7-f504-4449-b9b9-b78f9a936531'
-  imageRepository: 'bmdk4'
-  containerRegistry: 'bmdk4.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
-  imagePullSecret: 'bmdk43101-auth'
-  DOCKER_HOST: 'unix:///System/Volumes/Data/Users/umairferoze/.docker/run/docker.sock'
-  DOCKER_BUILDKIT: 1
+- group: KeyVaultVariables  # Add this line to include the variable group from Key Vault
+
+- name: dockerRegistryServiceConnection
+  value: '83f2b4e7-f504-4449-b9b9-b78f9a936531'
+- name: imageRepository
+  value: 'bmdk4'
+- name: containerRegistry
+  value: '$(ACR_NAME)' 
+- name: dockerfilePath
+  value: '**/Dockerfile'
+- name: tag
+  value: '$(Build.BuildId)'
+- name: imagePullSecret
+  value: 'bmdk43101-auth'
+- name: DOCKER_HOST
+  value: 'unix:///System/Volumes/Data/Users/umairferoze/.docker/run/docker.sock'
+- name: DOCKER_BUILDKIT
+  value: 1
 
 stages:
 - stage: Build
