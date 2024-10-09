@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: bmdk4 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bmdk4
+  template:
+    metadata:
+      labels:
+        app: bmdk4 
+    spec:
+      containers:
+        - name: bmdk4 
+          image: bmdk4.azurecr.io/bmdk4
+          ports:
+          - containerPort: 3000
